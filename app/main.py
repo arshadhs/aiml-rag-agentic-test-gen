@@ -1,11 +1,22 @@
-'''
-pip install langchain
-pip install langgraph
-pip install langchain-opena
+"""
+AIML RAG Agentic Test Generator
 
+Main entry point for the project.
 
-pip install langchain langchain-openai langchain-community chromadb python-dotenv tiktoken pytest coverage
-'''
+This script initialises the application, loads environment variables,
+connects to the LLM provider, and runs the first test-generation workflow.
+
+Project:
+    aiml-rag-agentic-test-gen
+
+Author:
+    Arshad Siddiqui
+
+Description:
+    This project uses Retrieval-Augmented Generation (RAG), Large Language
+    Models (LLMs), and agentic AI workflows to generate software test cases
+    from requirements, source code, documentation, and existing tests.
+"""
 
 from langchain.tools import tool
 from langchain.chat_models import init_chat_model
@@ -29,4 +40,4 @@ llm = ChatOpenAI(
     
 response = llm.invoke("Explain unit testinf in simple terms.")
 
-print(response.context)
+print(response.content)

@@ -46,3 +46,47 @@ VECTOR_DB_PATH=./chroma_db
 ```
 
 Note: Do not commit your real `.env` file to GitHub.
+
+# Planned Structure
+
+aiml-multi-agent-test-generator/
+│
+├── README.md
+├── requirements.txt
+├── .env.example
+├── .gitignore
+│
+├── app/
+│   ├── main.py
+│   ├── config.py
+│   └── pipeline.py
+│
+├── agents/
+│   ├── requirement_agent.py
+│   ├── code_analysis_agent.py
+│   ├── test_planner_agent.py
+│   ├── test_generator_agent.py
+│   ├── test_reviewer_agent.py
+│   └── report_agent.py
+│
+├── rag/
+│   ├── loader.py
+│   ├── splitter.py
+│   ├── vector_store.py
+│   └── retriever.py
+│
+├── data/
+│   ├── requirements/
+│   ├── source_code/
+│   ├── existing_tests/
+│   └── docs/
+│
+├── generated_tests/
+│
+├── evaluation/
+│   ├── coverage_report.py
+│   └── metrics.py
+│
+├── notebooks/
+│
+└── tests/
