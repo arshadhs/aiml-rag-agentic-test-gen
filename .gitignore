@@ -1,3 +1,11 @@
+# Prevents API key from being pushed to GitHub
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+
+chroma_db/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
