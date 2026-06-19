@@ -48,7 +48,7 @@ VECTOR_DB_PATH=./chroma_db
 Note: Do not commit your real `.env` file to GitHub.
 
 # Planned Structure
-
+```
 aiml-multi-agent-test-generator/
 │
 ├── README.md
@@ -90,3 +90,4 @@ aiml-multi-agent-test-generator/
 ├── notebooks/
 │
 └── tests/
+```
