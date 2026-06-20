@@ -49,6 +49,14 @@ Note: Do not commit your real `.env` file to GitHub.
 
 # Planned Structure
 ```
+
+- app/main.py  = starts and runs the workflow
+- agents/      = future agent logic
+- rag/         = RAG loading, splitting, vector store, retrieval
+- data/        = input documents
+- generated_tests/ = AI-generated test files
+- evaluation/  = coverage and quality metrics
+
 aiml-multi-agent-test-generator/
 │
 ├── README.md
@@ -75,11 +83,15 @@ aiml-multi-agent-test-generator/
 │   ├── vector_store.py
 │   └── retriever.py
 │
-├── data/
+├── └── data/
 │   ├── requirements/
-│   ├── source_code/
+│   │   └── requirements.md
+│   ├── docs/
+│	│   └── api_spec.md
 │   ├── existing_tests/
-│   └── docs/
+│   │   └── existing_tests.md
+│   └── source_code/
+│       └── source_code.md
 │
 ├── generated_tests/
 │
