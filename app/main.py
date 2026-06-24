@@ -18,11 +18,13 @@ Description:
     from requirements, source code, documentation, and existing tests.
 """
 
-print("main.py started")
+print("aiml-rag-agentic-test-gen: Started")
 
-import atexit
 import sys
-atexit.register(lambda: print(f"[atexit] process exiting, last exception: {sys.exc_info()}"))
+
+# For debugging
+# import atexit
+# atexit.register(lambda: print(f"[atexit] process exiting, last exception: {sys.exc_info()}"))
 
 from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -133,6 +135,28 @@ Rules:
     # Output
     print("---------------------")
     print(response.content)
+
+    # Save generated tests to file
+    outout_dir = PROJECT_ROOT / "generated_tests" / "python"
+    outout_dir.mkdir(parents=True, exist_ok=True)
+
+    output_file = outout_dir / "test_auth_service_generated.py"
+
+    clean_code = response.content.strip()
+
+    # Remove markdown (if model includes them)
+    if clean_code.startswith("```python"):
+        clean_code = clean_code.replace("```python", "", 1).strip()
+
+    if clean_code.startswith("```"):
+        clean_code = clean_code.replace("```", "", 1).strip()
+
+    if clean_code.endswith("```"):
+        clean_code = clean_code.replace("```", "", 1).strip()
+        
+    output_file.write_text(clean_code, encoding="utf-8")
+
+    print(f"\naiml-rag-agentic-test-gen: Generated tests saved to: {output_file}")
 
 if __name__ == "__main__":
     main()
