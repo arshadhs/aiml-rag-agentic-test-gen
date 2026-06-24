@@ -17,10 +17,14 @@ Description:
     Models (LLMs), and agentic AI workflows to generate software test cases
     from requirements, source code, documentation, and existing tests.
 """
-print("main.py started")
-from pathlib import Path
-import sys
 
+print("main.py started")
+
+import atexit
+import sys
+atexit.register(lambda: print(f"[atexit] process exiting, last exception: {sys.exc_info()}"))
+
+from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -55,11 +59,12 @@ def main():
 
     try:
         vectorstore = create_vector_store(chunks)
-        print("Step 3 done: vector store created")
+        print(f"Step 3 done: vector store type={type(vectorstore)}, value={vectorstore}")
     except BaseException as e:
+        import traceback
         print("Error while creating vector store")
-        print(type(e).__name__)
-        print (e)
+        print(f"{type(e).__name__}: {e}")
+        traceback.print_exc()
         return
 
     print(f"Loaded documents: {len(documents)}")
@@ -90,7 +95,11 @@ Task:
 
 Rules:
 - Return only valid pytest code.
+- Do not include Markdown code fences.
 - Do not include explanations outside the code.
+- Do not redefine or reimplement the application code.
+- Import the function under test from the application source code.
+- Use: from app.auth_service import login
 - Use clear test function names.
 - Use simple in-memory dictionaries for test data.
 - Assert both the `success` and `message` fields.
