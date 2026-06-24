@@ -3,9 +3,6 @@ AIML RAG Agentic Test Generator
 
 Main entry point for the project.
 
-This script initialises the application, loads environment variables,
-connects to the LLM provider, and runs the first test-generation workflow.
-
 Project:
     aiml-rag-agentic-test-gen
 
@@ -13,9 +10,10 @@ Author:
     Arshad Siddiqui
 
 Description:
-    This project uses Retrieval-Augmented Generation (RAG), Large Language
-    Models (LLMs), and agentic AI workflows to generate software test cases
-    from requirements, source code, documentation, and existing tests.
+Generate software test cases from requirements, source code, documentation, and existing tests.
+- Retrieval-Augmented Generation (RAG)
+- Large Language Models (LLMs)
+- agentic AI workflows
 """
 
 print("aiml-rag-agentic-test-gen: Started")
@@ -40,6 +38,23 @@ from rag.splitter import split_documents            # Import text chunking funct
 from rag.vector_store import create_vector_store    # Import database creator function
 from rag.retriever import retrieve_context          # Import similarity search function
 
+def clean_generated_code(raw_code: str) -> str:
+    """
+    Remove Markdown code fences if the LLM returns them.
+    """
+    clean_code = raw_code.strip()
+
+    if clean_code.startswith("```python"):
+        clean_code = clean_code.replace("```python", "", 1).strip()
+
+    if clean_code.startswith("```"):
+        clean_code = clean_code.replace("```", "", 1).strip()
+
+    if clean_code.endswith("```"):
+        clean_code = clean_code[:-3].strip()
+
+    return clean_code
+
 def main():
     print("load_dotenv...")
     load_dotenv()    # Read API keys from .env file
@@ -49,19 +64,19 @@ def main():
     # chunks = split_documents(documents)         # 2. Split Data
     # vectorstore = create_vector_store(chunks)   # 3. Create vector store (Embed text chunks and save to DB)
 
-    print("Step 1: about to load documents")
+    print("Step 1: Loading documents...")
     documents = load_documents("data")
     print(f"Step 1 done: loaded {len(documents)} documents")
 
-    print("Step 2: about to split documents")
+    print("Step 2: Splitting documents...")
     chunks = split_documents(documents)
     print(f"Step 2 done: created {len(chunks)} chunks")
 
-    print("Step 3: about to create vector store")
+    print("Step 3: Creating vector store...")
 
     try:
         vectorstore = create_vector_store(chunks)
-        print(f"Step 3 done: vector store type={type(vectorstore)}, value={vectorstore}")
+        print(f"Step 3 done: vector store created: {type(vectorstore)}")
     except BaseException as e:
         import traceback
         print("Error while creating vector store")
@@ -101,7 +116,8 @@ Rules:
 - Do not include explanations outside the code.
 - Do not redefine or reimplement the application code.
 - Import the function under test from the application source code.
-- Use: from app.auth_service import login
+- Use exactly this import: from app.auth_service import login
+- The login function signature is: login(username, password, users_db)
 - Use clear test function names.
 - Use simple in-memory dictionaries for test data.
 - Assert both the `success` and `message` fields.
@@ -137,23 +153,13 @@ Rules:
     print(response.content)
 
     # Save generated tests to file
-    outout_dir = PROJECT_ROOT / "generated_tests" / "python"
-    outout_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = PROJECT_ROOT / "generated_tests" / "python"
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    output_file = outout_dir / "test_auth_service_generated.py"
+    output_file = output_dir / "test_auth_service_generated.py"
 
-    clean_code = response.content.strip()
+    clean_code = clean_generated_code(response.content)
 
-    # Remove markdown (if model includes them)
-    if clean_code.startswith("```python"):
-        clean_code = clean_code.replace("```python", "", 1).strip()
-
-    if clean_code.startswith("```"):
-        clean_code = clean_code.replace("```", "", 1).strip()
-
-    if clean_code.endswith("```"):
-        clean_code = clean_code.replace("```", "", 1).strip()
-        
     output_file.write_text(clean_code, encoding="utf-8")
 
     print(f"\naiml-rag-agentic-test-gen: Generated tests saved to: {output_file}")
