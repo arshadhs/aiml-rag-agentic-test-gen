@@ -349,3 +349,5 @@ The planned multi-agent version may include:
 | Report Agent         | Summarises coverage and test quality       |
 
 ---
+
+<img width="1457" height="430" alt="image" src="https://github.com/user-attachments/assets/4ea2c75e-2258-49f5-846a-62d7ba4e9758" />
